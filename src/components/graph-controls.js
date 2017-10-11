@@ -22,6 +22,7 @@
   Zoom slider and zoom to fit controls for GraphView
 */
 
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Radium from 'radium';
 
@@ -100,7 +101,7 @@ class GraphControls extends Component {
     let sliderVal = e.target.value;
     let zoomLevelNext = this.sliderToZoom(sliderVal);
     let delta = zoomLevelNext-this.props.zoomLevel;
-    
+
     if( zoomLevelNext <= this.props.maxZoom && zoomLevelNext >= this.props.minZoom){
       this.props.modifyZoom(delta)
     }
@@ -113,13 +114,13 @@ class GraphControls extends Component {
       <div style={styles.controls} id="GraphControls">
         <span style={styles.sliderWrapper}>
           -
-          <input 
-            id="typeinp" 
+          <input
+            id="typeinp"
             type="range"
-            style={styles.slider} 
-            min={this.zoomToSlider(this.props.minZoom)} 
-            max={this.zoomToSlider(this.props.maxZoom)} 
-            value={this.zoomToSlider(this.props.zoomLevel)} 
+            style={styles.slider}
+            min={this.zoomToSlider(this.props.minZoom)}
+            max={this.zoomToSlider(this.props.maxZoom)}
+            value={this.zoomToSlider(this.props.zoomLevel)}
             onChange={this.zoom.bind(this)}
             step="1"/>
           +
@@ -133,12 +134,12 @@ class GraphControls extends Component {
 }
 
 GraphControls.propTypes = {
-  primary: React.PropTypes.string,
-  minZoom: React.PropTypes.number,
-  maxZoom: React.PropTypes.number,
-  zoomLevel: React.PropTypes.number.isRequired,
-  zoomToFit: React.PropTypes.func.isRequired,
-  modifyZoom: React.PropTypes.func.isRequired
+  primary: PropTypes.string,
+  minZoom: PropTypes.number,
+  maxZoom: PropTypes.number,
+  zoomLevel: PropTypes.number.isRequired,
+  zoomToFit: PropTypes.func.isRequired,
+  modifyZoom: PropTypes.func.isRequired
 }
 
 GraphControls.defaultProps = {

@@ -23,6 +23,7 @@
   code in it and no significant state except UI state (zoom, for example).
 */
 
+import PropTypes from 'prop-types';
 import React, {
   Component
 } from 'react';
@@ -215,7 +216,7 @@ class GraphView extends Component {
       nodeSubtypeDefs: Object.keys(props.nodeSubtypes).map(function(type){
         defIndex += 1;
         return React.cloneElement(props.nodeSubtypes[type].shape, {key: defIndex})
-      }),  
+      }),
       edgeDefs: Object.keys(props.edgeTypes).map(function(type){
         defIndex += 1;
         return React.cloneElement(props.edgeTypes[type].shape, {key: defIndex})
@@ -245,7 +246,7 @@ class GraphView extends Component {
     // until componentDidMount. Manually render the first view.
     this.renderView();
 
-    // It seems Electron/JSDom's mocking of the SVG API is incomplete 
+    // It seems Electron/JSDom's mocking of the SVG API is incomplete
     // and causes D3 to error out when zooming to fit in tests.
     if(process.env.NODE_ENV !== "test"){
       setTimeout(function(){
@@ -269,7 +270,7 @@ class GraphView extends Component {
       selectionChanged = true
     }
 
-    let selectionType = null; 
+    let selectionType = null;
     if (nextProps.selected && nextProps.selected.source){
       selectionType = 'edge'
     } else if (nextProps.selected && nextProps.selected[this.props.nodeKey]) {
@@ -312,7 +313,7 @@ class GraphView extends Component {
 
   drawEdge(sourceNode, target, swapErrBack){
     const self = this;
- 
+
     const dragEdge = d3.select(this.refs.entities).append('svg:path')
 
     dragEdge.attr('class', 'link dragline')
@@ -332,8 +333,8 @@ class GraphView extends Component {
       let hoveredNode = self.state.hoveredNode;
 
       self.setState({
-        edgeSwapQueue: self.state.edgeSwapQueue, 
-        drawingEdge: false 
+        edgeSwapQueue: self.state.edgeSwapQueue,
+        drawingEdge: false
       });
 
       if(hoveredNode && self.props.canCreateEdge(sourceNode, hoveredNode)){
@@ -379,8 +380,8 @@ class GraphView extends Component {
         var d = d3.select(this).datum();
         self.props.onUpdateNode(d);
       }
-      
-      // For some reason, mouseup isn't firing 
+
+      // For some reason, mouseup isn't firing
       // - manually firing it here
       d3.select(this).node().dispatchEvent(new Event("mouseup"))
     }
@@ -411,7 +412,7 @@ class GraphView extends Component {
   }
 
   handleWindowKeydown(d, i) {
-    // Conditionally ignore keypress events on the window 
+    // Conditionally ignore keypress events on the window
     // if the Graph isn't focused
     if (this.state.focused) {
       switch (d3.event.key) {
@@ -498,11 +499,11 @@ class GraphView extends Component {
 
   handleNodeMouseLeave(d) {
 
-    // For whatever reason, mouseLeave is fired when edge dragging ends 
+    // For whatever reason, mouseLeave is fired when edge dragging ends
     // (and mouseup is not fired). This clears the hoverNode state prematurely
-    // resulting in swapEdge failing to fire. 
+    // resulting in swapEdge failing to fire.
     // Detecting & ignoring mouseLeave events that result from drag ending here
-    const fromMouseup = event.which == 1; 
+    const fromMouseup = event.which == 1;
     if (this.state.hoveredNode === d && !fromMouseup){
       this.setState({
         hoveredNode: null
@@ -532,7 +533,7 @@ class GraphView extends Component {
       const target = {x: xycoords[0], y: xycoords[1]}
 
       this.hideEdge(edgeDOMNode);
-      this.drawEdge(sourceNode, target, this.showEdge.bind(this, edgeDOMNode))      
+      this.drawEdge(sourceNode, target, this.showEdge.bind(this, edgeDOMNode))
     }
   }
 
@@ -551,7 +552,7 @@ class GraphView extends Component {
         focused: true
       })
     }
-    
+
   }
 
   // Keeps 'zoom' contained
@@ -572,18 +573,18 @@ class GraphView extends Component {
   handleZoomToFit() {
     const parent = d3.select(this.refs.viewWrapper).node();
     const entities = d3.select(this.refs.entities).node();
-    
+
     const viewBBox = entities.getBBox();
 
     const width = parent.clientWidth;
     const height = parent.clientHeight;
 
-    let dx, 
-        dy, 
-        x, 
+    let dx,
+        dy,
+        x,
         y,
-        translate = [this.state.viewTransform.x, this.state.viewTransform.y], 
-        next = {x: translate[0], y: translate[1], k:  this.state.viewTransform.k} 
+        translate = [this.state.viewTransform.x, this.state.viewTransform.y],
+        next = {x: translate[0], y: translate[1], k:  this.state.viewTransform.k}
 
     if (viewBBox.width > 0 && viewBBox.height > 0){
       // There are entities
@@ -673,7 +674,7 @@ class GraphView extends Component {
       const yOff = off * Math.sin(theta);
 
       return this.getPathDescriptionStr(src.x + xOff, src.y + yOff, trg.x - xOff, trg.y - yOff )
-    } 
+    }
     console.warn("Unable to get source or target for ", edge);
     return ""
   }
@@ -697,20 +698,20 @@ class GraphView extends Component {
   }
 
   getNodeStyle(d, selected){
-    return d === selected ? 
-      this.state.styles.node.selectedString : 
+    return d === selected ?
+      this.state.styles.node.selectedString :
       this.state.styles.node.baseString
   }
 
   getEdgeStyle(d, selected){
-    return d === selected ? 
-      this.state.styles.edge.selectedString : 
+    return d === selected ?
+      this.state.styles.edge.selectedString :
       this.state.styles.edge.baseString
   }
 
   getTextStyle(d, selected){
-    return d === selected ? 
-      this.state.styles.text.selectedString : 
+    return d === selected ?
+      this.state.styles.text.selectedString :
       this.state.styles.text.baseString
   }
 
@@ -726,7 +727,7 @@ class GraphView extends Component {
     let textOffset = d.type === this.props.emptyType ? -9 : 18;
 
     d3Node.selectAll("text").remove();
-    
+
     let typeText = this.props.nodeTypes[d.type].typeText;
     let style = this.getTextStyle(d, this.props.selected);
 
@@ -776,7 +777,7 @@ class GraphView extends Component {
     newEdges.append('path');
     newEdges.append("use");
 
-    // Merge 
+    // Merge
     edges.enter().merge(edges);
 
     // Update All
@@ -802,7 +803,7 @@ class GraphView extends Component {
     var self = this;
     const nodeKey = this.props.nodeKey;
 
-    // Join Data 
+    // Join Data
     var nodes = entities.selectAll("g.node").data(nodes, function(d) {
       // IMPORTANT: this snippet allows D3 to detect updated vs. new data
       return d[nodeKey]
@@ -817,7 +818,7 @@ class GraphView extends Component {
 
     // Add New
     var newNodes = nodes.enter().append("g").classed("node", true);
-    
+
     newNodes.attr("style", this.state.styles.node.baseString)
       .on("mousedown", this.handleNodeMouseDown)
       .on("mouseup", this.handleNodeMouseUp)
@@ -833,7 +834,7 @@ class GraphView extends Component {
 
     newNodes
       .attr("opacity", 0)
-      .transition()  
+      .transition()
       .duration(self.props.transitionTime)
       .attr("opacity", 1);
 
@@ -850,14 +851,14 @@ class GraphView extends Component {
 
         if(d.subtype){
           d3.select(this).select("use.subtypeShape")
-            .attr("xlink:href", function(d){ return self.props.nodeSubtypes[d.subtype].shapeId }); 
+            .attr("xlink:href", function(d){ return self.props.nodeSubtypes[d.subtype].shapeId });
         } else {
           d3.select(this).select("use.subtypeShape")
-            .attr("xlink:href", function(d){ return null }); 
+            .attr("xlink:href", function(d){ return null });
         }
 
         d3.select(this).select("use.shape")
-            .attr("xlink:href", function(d){ return self.props.nodeTypes[d.type].shapeId }); 
+            .attr("xlink:href", function(d){ return self.props.nodeTypes[d.type].shapeId });
 
         self.renderNodeText(d, this);
       })
@@ -892,7 +893,7 @@ class GraphView extends Component {
               !!this.state.focused && styles.wrapper.focused,
               this.props.style
             ]}>
-        <svg  id='svgRoot' 
+        <svg  id='svgRoot'
               style={styles.svg.base}>
           <defs>
 
@@ -903,11 +904,11 @@ class GraphView extends Component {
             <marker id="end-arrow"
                     key="end-arrow"
                     viewBox={`0 -${edgeArrowSize/2} ${edgeArrowSize} ${edgeArrowSize}`}
-                    refX={`${edgeArrowSize/2}`} 
-                    markerWidth={`${edgeArrowSize}`} 
-                    markerHeight={`${edgeArrowSize}`} 
+                    refX={`${edgeArrowSize/2}`}
+                    markerWidth={`${edgeArrowSize}`}
+                    markerHeight={`${edgeArrowSize}`}
                     orient="auto">
-              <path style={ styles.arrow } 
+              <path style={ styles.arrow }
                     d={`M0,-${edgeArrowSize/2}L${edgeArrowSize},0L0,${edgeArrowSize/2}`}>
               </path>
             </marker>
@@ -951,10 +952,10 @@ class GraphView extends Component {
           }
         </svg>
         <GraphControls  primary={this.props.primary}
-                        minZoom={minZoom} 
-                        maxZoom={maxZoom} 
-                        zoomLevel={this.state.viewTransform.k} 
-                        zoomToFit={this.handleZoomToFit} 
+                        minZoom={minZoom}
+                        maxZoom={maxZoom}
+                        zoomLevel={this.state.viewTransform.k}
+                        zoomToFit={this.handleZoomToFit}
                         modifyZoom={this.modifyZoom}>
         </GraphControls>
       </div>
@@ -964,34 +965,34 @@ class GraphView extends Component {
 }
 
 GraphView.propTypes = {
-  primary: React.PropTypes.string,
-  light: React.PropTypes.string,
-  dark: React.PropTypes.string,
-  style: React.PropTypes.object,
-  nodeKey: React.PropTypes.string.isRequired,
-  emptyType: React.PropTypes.string.isRequired,
-  nodes: React.PropTypes.array.isRequired,
-  edges: React.PropTypes.array.isRequired,
-  readOnly: React.PropTypes.bool,
-  enableFocus: React.PropTypes.bool,
-  selected: React.PropTypes.object.isRequired,
-  nodeTypes: React.PropTypes.object.isRequired,
-  nodeSubtypes: React.PropTypes.object.isRequired,
-  edgeTypes: React.PropTypes.object.isRequired,
-  getViewNode: React.PropTypes.func.isRequired,
-  onSelectNode: React.PropTypes.func.isRequired,
-  onCreateNode: React.PropTypes.func.isRequired,
-  onUpdateNode: React.PropTypes.func.isRequired,
-  canDeleteNode: React.PropTypes.func,
-  onDeleteNode: React.PropTypes.func.isRequired,
-  onSelectEdge: React.PropTypes.func.isRequired,
-  canCreateEdge: React.PropTypes.func,
-  onCreateEdge: React.PropTypes.func.isRequired,
-  onSwapEdge: React.PropTypes.func.isRequired,
-  canDeleteEdge: React.PropTypes.func,
-  onDeleteEdge: React.PropTypes.func.isRequired,
-  maxTitleChars: React.PropTypes.number, // Per line.
-  transitionTime: React.PropTypes.number // D3 Enter/Exit duration
+  primary: PropTypes.string,
+  light: PropTypes.string,
+  dark: PropTypes.string,
+  style: PropTypes.object,
+  nodeKey: PropTypes.string.isRequired,
+  emptyType: PropTypes.string.isRequired,
+  nodes: PropTypes.array.isRequired,
+  edges: PropTypes.array.isRequired,
+  readOnly: PropTypes.bool,
+  enableFocus: PropTypes.bool,
+  selected: PropTypes.object.isRequired,
+  nodeTypes: PropTypes.object.isRequired,
+  nodeSubtypes: PropTypes.object.isRequired,
+  edgeTypes: PropTypes.object.isRequired,
+  getViewNode: PropTypes.func.isRequired,
+  onSelectNode: PropTypes.func.isRequired,
+  onCreateNode: PropTypes.func.isRequired,
+  onUpdateNode: PropTypes.func.isRequired,
+  canDeleteNode: PropTypes.func,
+  onDeleteNode: PropTypes.func.isRequired,
+  onSelectEdge: PropTypes.func.isRequired,
+  canCreateEdge: PropTypes.func,
+  onCreateEdge: PropTypes.func.isRequired,
+  onSwapEdge: PropTypes.func.isRequired,
+  canDeleteEdge: PropTypes.func,
+  onDeleteEdge: PropTypes.func.isRequired,
+  maxTitleChars: PropTypes.number, // Per line.
+  transitionTime: PropTypes.number // D3 Enter/Exit duration
 };
 
 GraphView.defaultProps = {
