@@ -26,7 +26,7 @@
   "main": "dist/index.js",
   "peerDependencies": {
     "d3": "^4.1.1",
-    "radium": "^0.18.1",
+    "radium": "^0.19.5",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-icons": "^2.2.1"
@@ -49,7 +49,7 @@
     "jsdom": "^9.8.0",
     "nws": "^1.1.1",
     "opn-cli": "1.x",
-    "radium": "^0.18.1",
+    "radium": "^0.19.5",
     "react": "^16.0.0",
     "react-addons-test-utils": "^15.3.2",
     "react-dom": "^16.0.0",
