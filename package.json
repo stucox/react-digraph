@@ -30,7 +30,8 @@
     "radium": "^0.19.5",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-icons": "^2.2.1"
+    "react-icons": "^2.2.1",
+    "react-test-renderer": "^16.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
@@ -42,7 +43,8 @@
     "browserify": "^13.1.0",
     "build-changelog": "^2.1.2",
     "d3": "^4.1.1",
-    "enzyme": "^2.5.1",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
     "eslint": "^2.0.0",
     "eslint-plugin-es6-recommended": "^0.1.2",
     "eslint-plugin-import-order": "^2.1.4",

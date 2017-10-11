@@ -22,14 +22,18 @@ import jsdom from 'jsdom'
 const test = require('tape');
 const sinon = require('sinon');
 const React = require('react');
-const mount = require('enzyme').mount;
-const render = require('enzyme').render;
+const Enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-16');
 
 const GraphView = require('../../components/graph-view').default;
 
 const doc = jsdom.jsdom('<!doctype html><html><body></body></html>')
 global.document = doc
 global.window = doc.defaultView
+
+
+Enzyme.configure({ adapter: new Adapter() });
+
 
 const EmptyShape = (
   <symbol viewBox="0 0 100 100" id="empty" key="0">
@@ -73,13 +77,13 @@ const config = {
       shapeId: "#special",
       shape: SpecialShape
     }
-  }, 
+  },
   NodeSubtypes: {
     specialChild: {
       shapeId: "#specialChild",
       shape: SpecialChildShape
     }
-  }, 
+  },
   EdgeTypes: {
     emptyEdge: {
       shapeId: "#emptyEdge",
@@ -93,7 +97,7 @@ const config = {
 }
 
 const EMPTY_TYPE = "empty"; // Empty node type
-const SPECIAL_TYPE = "special"; 
+const SPECIAL_TYPE = "special";
 const SPECIAL_CHILD_SUBTYPE = "specialChild";
 const EMPTY_EDGE_TYPE = "emptyEdge";
 const SPECIAL_EDGE_TYPE = "specialEdge";
@@ -173,7 +177,7 @@ const mockProps = {
 const tests = function(){
 
   test('GraphView', t => {
-    const wrapper = mount(<GraphView {...mockProps}/>);
+    const wrapper = Enzyme.mount(<GraphView {...mockProps}/>);
     t.equal(wrapper.find('#viewWrapper').length, 1, 'Renders wrapper');
 
     const view = wrapper.find('#view').render()
